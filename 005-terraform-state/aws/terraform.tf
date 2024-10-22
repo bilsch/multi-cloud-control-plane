@@ -7,6 +7,10 @@ terraform {
     random = {
       version = "~> 3.6.3"
     }
+
+    vault = {
+      version = "~> 4.4.0"
+    }
   }
 
   backend "consul" {
