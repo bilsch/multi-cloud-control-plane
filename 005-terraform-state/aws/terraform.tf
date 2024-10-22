@@ -3,6 +3,10 @@ terraform {
     aws = {
       version = "~> 5.72.1"
     }
+
+    random = {
+      version = "~> 3.6.3"
+    }
   }
 
   backend "consul" {

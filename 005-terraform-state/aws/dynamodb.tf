@@ -1,11 +1,13 @@
 resource "aws_dynamodb_table" "this" {
-  name             = "lab_terraform_state"
-  billing_mode     = "PAY_PER_REQUEST"
+  name             = "${var.name}_terraform_state"
   read_capacity    = 5
   write_capacity   = 5
   hash_key         = "LockID"
   stream_enabled   = true
   stream_view_type = "NEW_AND_OLD_IMAGES"
+  tags = {
+    project = var.name,
+  }
 
   attribute {
     name = "LockID"
@@ -18,6 +20,6 @@ resource "aws_dynamodb_table" "this" {
 
   server_side_encryption {
     enabled     = true
-    kms_key_arn = aws_kms_key.this.key_id
+    kms_key_arn = aws_kms_key.this.arn
   }
 }

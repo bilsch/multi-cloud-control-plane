@@ -1,5 +1,15 @@
+resource "random_string" "this" {
+  length  = 12
+  lower   = true
+  upper   = false
+  special = false
+}
+
 resource "aws_s3_bucket" "this" {
-  bucket = "bilsch-terraform-state-lab"
+  bucket = "terraform-state-${var.name}-${resource.random_string.this.result}"
+  tags = {
+    project = var.name,
+  }
 }
 
 resource "aws_s3_bucket_versioning" "this" {
