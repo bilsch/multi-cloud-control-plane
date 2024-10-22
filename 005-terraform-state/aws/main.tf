@@ -5,44 +5,43 @@ resource "random_string" "this" {
   special = false
 }
 
-resource "aws_s3_bucket" "this" {
-  bucket = "terraform-state-${var.name}-${resource.random_string.this.result}"
+module "s3_bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "4.2.1"
+
+  allowed_kms_key_arn = aws_kms_key.this.arn
+
+  # these are both defaults but just to be safe
+  block_public_acls   = true
+  block_public_policy = true
+
+  bucket              = "terraform-state-${var.name}-${resource.random_string.this.result}"
+  object_lock_enabled = true
+  object_ownership    = "ObjectWriter"
+
+  object_lock_configuration = {
+    rule = {
+      default_retention = {
+        mode = "GOVERNANCE"
+        days = 1
+      }
+    }
+  }
+
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        kms_master_key_id = aws_kms_key.this.arn
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+
+  versioning = {
+    enabled = true
+  }
+
   tags = {
-    project = var.name,
+    profile = var.name,
   }
-}
-
-resource "aws_s3_bucket_versioning" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.this.arn
-      sse_algorithm     = "aws:kms"
-    }
-  }
-}
-
-resource "aws_s3_bucket_object_lock_configuration" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    default_retention {
-      mode = "COMPLIANCE"
-      days = 5
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "this" {
-  bucket            = aws_s3_bucket.this.id
-  block_public_acls = true
 }
