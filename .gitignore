@@ -1,6 +1,9 @@
 # infracost for cloud env cost analysis
 .infracost
 
+# We don't check the lock files in they are going to be dynamic
+**/.terraform.lock.hcl
+
 # Local .terraform directories
 **/.terraform/*
 
