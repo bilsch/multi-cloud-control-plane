@@ -1,15 +1,20 @@
-resource "vault_mount" "kvv1" {
-  path        = "bilsch/aws/${var.profile}"
-  type        = "kv"
-  options     = { version = "1" }
-  description = "KV Version 1 secret engine mount"
-}
+resource "vault_kv_secret_v2" "s3_bucket" {
+  mount               = "secret"
+  name                = "bilsch/aws/${var.profile}/s3_bucket"
+  cas                 = 1
+  delete_all_versions = true
 
-resource "vault_kv_secret" "secret" {
-  path = "${vault_mount.kvv1.path}/s3_bucket"
   data_json = jsonencode({
     "s3_bucket_arn"                = module.s3_bucket.s3_bucket_arn,
     "s3_bucket_bucket_domain_name" = module.s3_bucket.s3_bucket_bucket_domain_name,
     "s3_bucket_id"                 = module.s3_bucket.s3_bucket_id
   })
+
+  custom_metadata {
+    max_versions = 5
+    data = {
+      profile = var.profile,
+    }
+  }
+
 }
