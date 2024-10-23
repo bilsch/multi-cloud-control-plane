@@ -15,7 +15,7 @@ resource "azurerm_storage_account" "this" {
   infrastructure_encryption_enabled = true
 
   tags = {
-    profile = "tfstate-${var.name}",
+    profile = "tfstate-${var.profile}",
   }
 }
 

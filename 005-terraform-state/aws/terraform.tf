@@ -21,3 +21,7 @@ terraform {
 
   required_version = "~> 1.9.7"
 }
+
+provider "vault" {
+  # Note we are taking from the shell environment for address and token
+}

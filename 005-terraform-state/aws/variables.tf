@@ -4,7 +4,7 @@ variable "location" {
   default     = "us-east-2"
 }
 
-variable "name" {
+variable "profile" {
   type        = string
   description = "Used in resource names"
   default     = "lab"

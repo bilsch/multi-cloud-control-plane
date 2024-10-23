@@ -57,6 +57,6 @@ resource "aws_kms_key" "this" {
     ]
   })
   tags = {
-    name = var.name,
+    name = var.profile,
   }
 }

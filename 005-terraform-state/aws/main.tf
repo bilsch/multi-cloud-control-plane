@@ -15,7 +15,7 @@ module "s3_bucket" {
   block_public_acls   = true
   block_public_policy = true
 
-  bucket              = "terraform-state-${var.name}-${resource.random_string.this.result}"
+  bucket              = "terraform-state-${var.profile}-${resource.random_string.this.result}"
   object_lock_enabled = true
   object_ownership    = "ObjectWriter"
 
@@ -42,6 +42,6 @@ module "s3_bucket" {
   }
 
   tags = {
-    profile = var.name,
+    profile = var.profile,
   }
 }
