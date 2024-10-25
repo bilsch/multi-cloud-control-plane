@@ -16,7 +16,8 @@ terraform {
   backend "consul" {
     address = "consul.bilsch.org:8501"
     scheme  = "https"
-    path    = "terraform/state/005-terraform-state/aws"
+    # TODO how do we make this dynamic? terragrunt time finally?
+    path = "terraform/state/005-terraform-state/aws/lab"
   }
 
   required_version = "~> 1.9.7"
