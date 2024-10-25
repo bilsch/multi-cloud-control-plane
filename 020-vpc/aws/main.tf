@@ -1,6 +1,6 @@
 locals {
   # TODO this path sucks!
-  config = yamldecode(file("/home/bilsch/gits/multi-cloud-control-configs-private/clouds/aws/${var.profile}.yaml"))
+  config = yamldecode(file("/Users/bilsch/gits/multi-cloud-control-configs-private/clouds/aws/${var.profile}.yaml"))
 }
 
 provider "aws" {
@@ -31,8 +31,8 @@ module "vpc" {
   one_nat_gateway_per_az = true
 
   # ipv6 support
-  enable_ipv6                                   = var.enable_ipv6
-  public_subnet_assign_ipv6_address_on_creation = var.enable_ipv6
+  enable_ipv6                                   = local.config.vpc.ipv6_enabled
+  public_subnet_assign_ipv6_address_on_creation = local.config.vpc.ipv6_enabled
   public_subnet_ipv6_prefixes                   = [0, 1, 2]
   private_subnet_ipv6_prefixes                  = [3, 4, 5]
   database_subnet_ipv6_prefixes                 = [6, 7, 8]
@@ -46,9 +46,9 @@ module "vpc" {
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   vpc_flow_log_iam_role_name            = "vpc-${var.profile}-flow-logs"
   vpc_flow_log_iam_role_use_name_prefix = false
-  enable_flow_log                       = var.enable_flow_log
-  create_flow_log_cloudwatch_log_group  = var.enable_flow_log
-  create_flow_log_cloudwatch_iam_role   = var.enable_flow_log
+  enable_flow_log                       = local.config.vpc.enable_flow_log
+  create_flow_log_cloudwatch_log_group  = local.config.vpc.enable_flow_log
+  create_flow_log_cloudwatch_iam_role   = local.config.vpc.enable_flow_log
   flow_log_max_aggregation_interval     = 60
 
   tags = {
