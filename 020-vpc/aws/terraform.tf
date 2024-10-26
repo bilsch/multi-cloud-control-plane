@@ -15,9 +15,7 @@ terraform {
 
   # TODO: This should be using the s3 / dynamodb from 005-terraform-state not consul
   backend "consul" {
-    address = "consul.bilsch.org:8501"
-    scheme  = "https"
-    path    = "terraform/state/020-vpc/aws"
+    path = "terraform/state/020-vpc/aws/lab"
   }
 
   required_version = "~> 1.9.7"

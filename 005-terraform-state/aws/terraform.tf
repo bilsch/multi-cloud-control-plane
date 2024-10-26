@@ -14,8 +14,6 @@ terraform {
   }
 
   backend "consul" {
-    address = "consul.bilsch.org:8501"
-    scheme  = "https"
     # TODO how do we make this dynamic? terragrunt time finally?
     path = "terraform/state/005-terraform-state/aws/lab"
   }
