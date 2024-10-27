@@ -1,6 +1,34 @@
 locals {
   # TODO this path sucks!
   config = yamldecode(file("/Users/bilsch/gits/multi-cloud-control-configs-private/clouds/aws/${var.profile}.yaml"))
+
+  network_acls = {
+    # TODO: Do we want to allow anything by default?
+    default_inbound = [
+    ]
+
+    default_outbound = [
+    ]
+
+    public_inbound = [for rule in local.config.vpc.acls.public.inbound : rule]
+
+    public_outbound = []
+
+    private_inbound = []
+
+    private_outbound = []
+
+    database_inbound = []
+
+    database_outbound = []
+
+    # aka kubernetes
+    infra_inbound = [
+    ]
+
+    infra_outbound = [
+    ]
+  }
 }
 
 provider "aws" {
@@ -21,6 +49,26 @@ module "vpc" {
   database_subnets = local.config.vpc.database_subnets
   public_subnets   = local.config.vpc.public_subnets
   intra_subnets    = local.config.vpc.kubernetes_subnets
+
+  # apply our default inbound/outbound
+  # note unless you override these default to drop
+  # Anything you add to a given subnet you must also put in explicit rules to allow traffic!
+
+  public_dedicated_network_acl = true
+  public_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["public_inbound"])
+  public_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["public_outbound"])
+
+  private_dedicated_network_acl = true
+  private_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["private_inbound"])
+  private_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["private_outbound"])
+
+  database_dedicated_network_acl = true
+  database_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["database_inbound"])
+  database_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["database_outbound"])
+
+  intra_dedicated_network_acl = true
+  intra_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["infra_inbound"])
+  intra_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["infra_outbound"])
 
   public_subnet_names   = ["public-0", "public-1", "public-2"]
   database_subnet_names = ["database-0", "database-1", "database-2"]
