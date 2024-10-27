@@ -10,24 +10,18 @@ locals {
     default_outbound = [
     ]
 
-    public_inbound = [for rule in local.config.vpc.acls.public.inbound : rule]
+    public_inbound  = [for rule in local.config.vpc.acls.public.inbound : rule]
+    public_outbound = [for rule in local.config.vpc.acls.public.outbound : rule]
 
-    public_outbound = []
+    private_inbound  = [for rule in local.config.vpc.acls.private.inbound : rule]
+    private_outbound = [for rule in local.config.vpc.acls.private.outbound : rule]
 
-    private_inbound = []
-
-    private_outbound = []
-
-    database_inbound = []
-
-    database_outbound = []
+    database_inbound  = [for rule in local.config.vpc.acls.database.inbound : rule]
+    database_outbound = [for rule in local.config.vpc.acls.database.outbound : rule]
 
     # aka kubernetes
-    infra_inbound = [
-    ]
-
-    infra_outbound = [
-    ]
+    infra_inbound  = [for rule in local.config.vpc.acls.intra.inbound : rule]
+    infra_outbound = [for rule in local.config.vpc.acls.intra.outbound : rule]
   }
 }
 
@@ -86,10 +80,9 @@ module "vpc" {
   database_subnet_ipv6_prefixes                 = [6, 7, 8]
   intra_subnet_ipv6_prefixes                    = [9, 10, 11]
 
-  # We want all security defaults disabled. Explicit rules only by subsequent stages
-  create_database_subnet_group  = false
+  create_database_subnet_group  = true
   manage_default_network_acl    = false
-  manage_default_security_group = false
+  manage_default_security_group = true
 
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   vpc_flow_log_iam_role_name            = "vpc-${var.profile}-flow-logs"
