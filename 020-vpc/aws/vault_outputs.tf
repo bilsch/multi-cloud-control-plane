@@ -1,7 +1,6 @@
 resource "vault_kv_secret_v2" "this" {
   mount               = "secret"
   name                = "bilsch/aws/${var.profile}/vpc"
-  cas                 = 1
   delete_all_versions = true
 
   data_json = jsonencode({
@@ -12,11 +11,4 @@ resource "vault_kv_secret_v2" "this" {
     "vpc_flow_log_destination_arn"  = module.vpc.vpc_flow_log_destination_arn,
     "vpc_flow_log_destination_type" = module.vpc.vpc_flow_log_destination_type,
   })
-
-  custom_metadata {
-    max_versions = 5
-    data = {
-      profile = var.profile,
-    }
-  }
 }
