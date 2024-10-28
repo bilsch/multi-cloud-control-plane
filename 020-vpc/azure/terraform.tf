@@ -13,12 +13,12 @@ terraform {
       version = "~> 4.4.0"
     }
   }
+
+  # TODO: This should be using the s3 / dynamodb from 005-terraform-state not consul
   backend "consul" {
-    address = "consul.bilsch.org:8501"
-    scheme  = "https"
-    # TODO how do we make this dynamic? terragrunt time finally?
     path = "terraform/state/020-vpc/azure/lab"
   }
+
 }
 
 provider "azurerm" {
