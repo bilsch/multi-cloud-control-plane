@@ -4,14 +4,11 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/bilsch/terraform-azure-vpc"
+  source = "git@github.com:bilsch/terraform-azure-vpc.git"
 
-  name = var.profile
-
-  cidr = local.config.vpc.cidr
-
-  dns_servers = local.config.vpc.dns_servers
-
+  name               = var.profile
+  cidr               = local.config.vpc.cidr
+  dns_servers        = local.config.vpc.dns_servers
   public_subnets     = local.config.vpc.public_subnets
   private_subnets    = local.config.vpc.private_subnets
   database_subnets   = local.config.vpc.database_subnets
