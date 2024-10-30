@@ -16,8 +16,8 @@ locals {
     private_inbound  = [for rule in local.config.vpc.acls.private.inbound : rule]
     private_outbound = [for rule in local.config.vpc.acls.private.outbound : rule]
 
-    # database_inbound  = [for rule in local.config.vpc.acls.database.inbound : rule]
-    # database_outbound = [for rule in local.config.vpc.acls.database.outbound : rule]
+    database_inbound  = [for rule in local.config.vpc.acls.database.inbound : rule]
+    database_outbound = [for rule in local.config.vpc.acls.database.outbound : rule]
 
     # aka kubernetes
     infra_inbound  = [for rule in local.config.vpc.acls.intra.inbound : rule]
@@ -39,10 +39,10 @@ module "vpc" {
   cidr = local.config.vpc.cidr
   azs  = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  private_subnets = local.config.vpc.private_subnets
-  # database_subnets = local.config.vpc.database_subnets
-  public_subnets = local.config.vpc.public_subnets
-  intra_subnets  = local.config.vpc.kubernetes_subnets
+  private_subnets  = local.config.vpc.private_subnets
+  database_subnets = local.config.vpc.database_subnets
+  public_subnets   = local.config.vpc.public_subnets
+  intra_subnets    = local.config.vpc.kubernetes_subnets
 
   # apply our default inbound/outbound
   # note unless you override these default to drop
@@ -56,17 +56,17 @@ module "vpc" {
   private_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["private_inbound"])
   private_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["private_outbound"])
 
-  # database_dedicated_network_acl = true
-  # database_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["database_inbound"])
-  # database_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["database_outbound"])
+  database_dedicated_network_acl = true
+  database_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["database_inbound"])
+  database_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["database_outbound"])
 
   intra_dedicated_network_acl = true
   intra_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["infra_inbound"])
   intra_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["infra_outbound"])
 
-  public_subnet_names = ["public-0"] #, "public-1", "public-2"]
-  # database_subnet_names = ["database-0"]   #, "database-1", "database-2"]
-  intra_subnet_names = ["kubernetes-0"] #, "kubernetes-1", "kubernetes-2"]
+  public_subnet_names   = ["public-0", "public-1", "public-2"]
+  database_subnet_names = ["database-0", "database-1", "database-2"]
+  intra_subnet_names    = ["kubernetes-0", "kubernetes-1", "kubernetes-2"]
 
   enable_nat_gateway     = true
   single_nat_gateway     = true  # should be false for multi-az
@@ -76,13 +76,12 @@ module "vpc" {
   enable_ipv6                                   = local.config.vpc.ipv6_enabled
   public_subnet_assign_ipv6_address_on_creation = local.config.vpc.ipv6_enabled
 
-  # Adjust for multi-az - should be 3 elements each
-  public_subnet_ipv6_prefixes  = [0] #, 1, 2]
-  private_subnet_ipv6_prefixes = [3] #, 4, 5]
-  # database_subnet_ipv6_prefixes = [6] #, 7, 8]
-  intra_subnet_ipv6_prefixes = [9] #, 10, 11]
+  public_subnet_ipv6_prefixes   = [0, 1, 2]
+  private_subnet_ipv6_prefixes  = [3, 4, 5]
+  database_subnet_ipv6_prefixes = [6, 7, 8]
+  intra_subnet_ipv6_prefixes    = [9, 10, 11]
 
-  # create_database_subnet_group  = true
+  create_database_subnet_group  = true
   manage_default_network_acl    = false
   manage_default_security_group = true
 
