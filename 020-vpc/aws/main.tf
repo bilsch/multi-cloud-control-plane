@@ -64,21 +64,21 @@ module "vpc" {
   intra_inbound_acl_rules     = concat(local.network_acls["default_inbound"], local.network_acls["infra_inbound"])
   intra_outbound_acl_rules    = concat(local.network_acls["default_outbound"], local.network_acls["infra_outbound"])
 
-  public_subnet_names   = ["public-0", "public-1", "public-2"]
-  database_subnet_names = ["database-0", "database-1", "database-2"]
-  intra_subnet_names    = ["kubernetes-0", "kubernetes-1", "kubernetes-2"]
+  public_subnet_names   = ["public-0"]     #, "public-1", "public-2"]
+  database_subnet_names = ["database-0"]   #, "database-1", "database-2"]
+  intra_subnet_names    = ["kubernetes-0"] #, "kubernetes-1", "kubernetes-2"]
 
   enable_nat_gateway     = true
-  single_nat_gateway     = false
-  one_nat_gateway_per_az = true
+  single_nat_gateway     = true  # should be false for multi-az
+  one_nat_gateway_per_az = false # should be true for multi-az
 
   # ipv6 support
   enable_ipv6                                   = local.config.vpc.ipv6_enabled
   public_subnet_assign_ipv6_address_on_creation = local.config.vpc.ipv6_enabled
-  public_subnet_ipv6_prefixes                   = [0, 1, 2]
-  private_subnet_ipv6_prefixes                  = [3, 4, 5]
-  database_subnet_ipv6_prefixes                 = [6, 7, 8]
-  intra_subnet_ipv6_prefixes                    = [9, 10, 11]
+  public_subnet_ipv6_prefixes                   = [0] #, 1, 2]
+  private_subnet_ipv6_prefixes                  = [3] #, 4, 5]
+  database_subnet_ipv6_prefixes                 = [6] #, 7, 8]
+  intra_subnet_ipv6_prefixes                    = [9] #, 10, 11]
 
   create_database_subnet_group  = true
   manage_default_network_acl    = false
