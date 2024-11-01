@@ -1,6 +1,6 @@
 resource "vault_kv_secret_v2" "terraform_state_store" {
   mount               = "secret"
-  name                = "bilsch/aws/${var.profile}/terraform_state_store"
+  name                = "multi-cloud/aws/${var.profile}/terraform_state_store"
   cas                 = 1
   delete_all_versions = true
 

@@ -1,6 +1,6 @@
 resource "vault_kv_secret_v2" "this" {
   mount               = "secret"
-  name                = "bilsch/azure/${var.profile}/vpc"
+  name                = "multi-cloud/azure/${var.profile}/vpc"
   delete_all_versions = true
 
   data_json = jsonencode({
