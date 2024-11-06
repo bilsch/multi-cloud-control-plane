@@ -1,11 +1,12 @@
 terraform {
   required_providers {
     aws = {
-      version = "~> 5.72.1"
+      version = "~> 5.74"
     }
 
-    random = {
-      version = "~> 3.6.3"
+    kubectl = {
+      source  = "alekc/kubectl"
+      version = "~> 2.0"
     }
 
     vault = {

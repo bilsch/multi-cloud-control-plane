@@ -1,5 +1,5 @@
 module "karpenter" {
-  source = "../../modules/karpenter"
+  source = "terraform-aws-modules/eks/aws//modules/karpenter"
 
   cluster_name = module.eks.cluster_name
 
