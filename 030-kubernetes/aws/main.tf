@@ -124,21 +124,3 @@ module "eks" {
     name = var.profile
   }
 }
-
-module "karpenter" {
-  source = "../../modules/karpenter"
-
-  cluster_name = module.eks.cluster_name
-
-  enable_v1_permissions = true
-
-  enable_pod_identity             = true
-  create_pod_identity_association = true
-
-  # Used to attach additional IAM policies to the Karpenter node IAM role
-  node_iam_role_additional_policies = {
-    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  }
-
-  tags = local.tags
-}
