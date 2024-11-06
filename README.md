@@ -21,6 +21,7 @@ The directory strucutre within a given stage is fairly simple. The first directo
 The general structure for a given provider stage:
 
 | file    | purpose |
+| ------- | ------- |
 | data.tf | Data lookups needed by your module calls |
 | terraform.tf | Configure your providers |
 | main.tf | This is where your module calls should be placed |
