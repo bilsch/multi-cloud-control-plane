@@ -4,7 +4,7 @@ locals {
 }
 
 module "vpc" {
-  source = "git@github.com:bilsch/terraform-azure-vpc.git"
+  source = "git::https://github.com/bilsch/terraform-azure-vpc.git?ref=v0.1"
 
   name               = var.profile
   cidr               = local.config.vpc.cidr
