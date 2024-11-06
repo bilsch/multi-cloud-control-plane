@@ -4,7 +4,7 @@
 
 locals {
   # TODO this path sucks!
-  config = yamldecode(file("/Users/bilsch/gits/multi-cloud-control-configs-private/clouds/aws/${var.profile}.yaml"))
+  config = yamldecode(file("../../configs/aws/${var.profile}.yaml"))
 }
 
 provider "aws" {

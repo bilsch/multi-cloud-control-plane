@@ -1,0 +1,32 @@
+---
+provider:
+  type: azure
+  region: "East US 2"
+  profile: lab
+vpc:
+  # https://www.davidc.net/sites/default/subnets/subnets.html?network=10.1.0.0&mask=16&division=15.7231
+  dns_servers:
+    - 4.4.4.4
+    - 8.8.8.8
+  cidr:
+    - 10.1.0.0/16
+  private_subnets:
+    - 10.1.0.0/20
+    - 10.1.64.0/20
+  public_subnets:
+    - 10.1.16.0/20
+    - 10.1.80.0/20
+  database_subnets:
+    - 10.1.32.0/20
+    - 10.1.112.0/20
+  kubernetes_subnets:
+    - 10.1.48.0/20
+    - 10.1.128.0/20
+  free_subnets:
+    - 10.1.144.0/20
+    - 10.1.160.0/20
+    - 10.1.176.0/20
+    - 10.1.192.0/20
+    - 10.1.208.0/20
+    - 10.1.224.0/20
+    - 10.1.240.0/20

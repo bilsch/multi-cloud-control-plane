@@ -1,6 +1,6 @@
 locals {
   # TODO this path sucks!
-  config = yamldecode(file("/Users/bilsch/gits/multi-cloud-control-configs-private/clouds/azure/${var.profile}.yaml"))
+  config = yamldecode(file("../../configs/azure/${var.profile}.yaml"))
 }
 
 module "vpc" {
