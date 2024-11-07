@@ -16,31 +16,27 @@ provider "aws" {
   alias  = "virginia"
 }
 
-data "vault_kv_secret_v2" "vpc_id" {
+data "vault_kv_secret_v2" "vpc" {
   mount = "secret"
-  name  = "bilsch/aws/${var.profile}/vpc"
+  name  = "multi-cloud/aws/${var.profile}/vpc"
 }
 
 data "aws_caller_identity" "this" {}
 
 data "aws_availability_zones" "this" {}
 
-data "aws_vpc" "this" {
-  id = data.vault_kv_secret_v2.vpc_id.data_json.vpc_id
-}
-
 data "aws_ecrpublic_authorization_token" "token" {
   provider = aws.virginia
 }
 
-data "aws_subnet" "private" {
+data "aws_subnets" "private" {
   filter {
     name   = "tag:Name"
-    values = ["private*"]
+    values = ["${var.profile}-private*"]
   }
 }
 
-data "aws_subnet" "kubernetes" {
+data "aws_subnets" "kubernetes" {
   filter {
     name   = "tag:Name"
     values = ["kubernetes*"]
@@ -83,7 +79,8 @@ module "eks" {
   version = "~> 20.0"
 
   cluster_name    = var.profile
-  cluster_version = local.config.kubernetes.versions.kubernetes
+  cluster_version = local.config.kubernetes.version
+  # cluster_upgrade_policy = "standard"
 
   cluster_endpoint_public_access = true
 
@@ -96,9 +93,9 @@ module "eks" {
     vpc-cni                = {}
   }
 
-  vpc_id                   = data.aws_vpc.this.vpc_id
-  subnet_ids               = data.aws_subnet.kubernetes.*.id
-  control_plane_subnet_ids = data.aws_subnet.private.*.id
+  vpc_id                   = data.vault_kv_secret_v2.vpc.data.vpc_id
+  subnet_ids               = data.aws_subnets.kubernetes.ids
+  control_plane_subnet_ids = data.aws_subnets.private.ids
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {

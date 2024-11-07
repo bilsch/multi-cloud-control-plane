@@ -1,5 +1,5 @@
 module "karpenter" {
-  source = "../../modules/karpenter"
+  source = "terraform-aws-modules/eks/aws//modules/karpenter"
 
   cluster_name = module.eks.cluster_name
 
@@ -79,7 +79,7 @@ resource "kubectl_manifest" "karpenter_node_pool" {
               values: ["t", "c", "m", "r"]
             - key: "karpenter.k8s.aws/instance-cpu"
               operator: In
-              values: ["2", "4""]
+              values: ["2", "4"]
             - key: "karpenter.k8s.aws/instance-hypervisor"
               operator: In
               values: ["nitro"]
