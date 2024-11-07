@@ -94,8 +94,8 @@ module "eks" {
   }
 
   vpc_id                   = data.vault_kv_secret_v2.vpc.data.vpc_id
-  subnet_ids               = coalescelist(data.aws_subnets.kubernetes.ids)
-  control_plane_subnet_ids = coalescelist(data.aws_subnets.private.ids)
+  subnet_ids               = data.aws_subnets.kubernetes.ids
+  control_plane_subnet_ids = data.aws_subnets.private.ids
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
